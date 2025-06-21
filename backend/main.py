@@ -11,8 +11,8 @@ from models import Contact
 # localhost:5000/create_contact
 # REQUEST:{type: CREATE json: { } } RESPONSE : STATUS
 
-@app.route("/create_contacts",methods=["POST"])
-def create_contacts():
+@app.route("/create_contact",methods=["POST"])
+def create_contact():
   
     first_name = request.json.get("firstName")
     last_name = request.json.get("lastName")
@@ -69,7 +69,7 @@ def update_contacts(user_id):
 # REQUEST:{type: get json: { } } RESPONSE : STATUS
 
 @app.route("/delete_contacts/<int:user_id>",methods=["DELETE"])
-def update_contacts(user_id):
+def delete_contacts(user_id):
     contact = Contact.query.get(user_id)
 
     if not contact:
