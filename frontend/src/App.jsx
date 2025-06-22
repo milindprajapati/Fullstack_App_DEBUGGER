@@ -5,38 +5,54 @@ import './App.css'
 
 function App() {
   const [contacts, setContacts] = useState([])
-  const [isModalOpen, setIsModelOpen] = useState(false)
-  useEffect( () => {
+  const [isModalOpen, setIsModalOpen] = useState(false) // ✅ Fixed typo
+  const [currentContact, setCurrentContact] = useState({})
+
+  useEffect(() => {
     fetchContacts()
   }, [])
 
-  const fetchContacts = async() => {
-      const response = await fetch("http://127.0.0.1:5000/contacts")
-      const data = await response.json()
-      setContacts(data.contacts)
-      console.log(data.contacts)
-  } 
-  
+  const fetchContacts = async () => {
+    const response = await fetch("http://127.0.0.1:5000/contacts")
+    const data = await response.json()
+    setContacts(data.contacts)
+  }
+
   const closeModal = () => {
-    setIsModelOpen(false)
+    setIsModalOpen(false)
+    setCurrentContact({})
   }
-  
+
   const openCreateModal = () => {
-    if(!isModalOpen)setIsModelOpen(true)
+    if (!isModalOpen) setIsModalOpen(true)
   }
-  return (<>
-  <ContactList contacts={contacts} /> 
-  <button onClick={openCreateModal}>Create New Contact</button>
-  {
-    isModalOpen && <div className="Modal">
-      <div className="modal-content">
-        <span className="close" onClick={closeModal}>&times;</span>
-        <ContactForm />
-      </div>
-    </div>
+
+  const openEditModal = (contact) => { 
+    if (isModalOpen) return
+    setCurrentContact(contact)
+    setIsModalOpen(true)
   }
-  
-  </>)
+
+  const onUpdate = () => { // ✅ Fixed: renamed and corrected typo
+    closeModal()
+    fetchContacts()
+  }
+
+  return (
+    <>
+      <ContactList contacts={contacts} updateContact={openEditModal} updateCallback={onUpdate} /> 
+      <button onClick={openCreateModal}>Create New Contact</button>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>&times;</span>
+            <ContactForm existingContact={currentContact} onUpdate={onUpdate} updateCallback={onUpdate} /> 
+          </div>
+        </div>
+      )}
+    </>
+  )
 }
 
 export default App

@@ -38,7 +38,7 @@ def create_contact():
 # REQUEST:{type: get json: { } } RESPONSE : STATUS
 
 @app.route("/contacts",methods=["GET"])
-def get_contacts():
+def get_contact():
     contacts = Contact.query.all()
     json_contacts = list(map(lambda x : x.to_json(), contacts))
     return jsonify({"contacts": json_contacts})
@@ -48,16 +48,16 @@ def get_contacts():
 # localhost:5000/update_contacts
 # REQUEST:{type: get json: { } } RESPONSE : STATUS
 
-@app.route("/update_contacts/<int:user_id>",methods=["PATCH"])
-def update_contacts(user_id):
+@app.route("/update_contact/<int:user_id>",methods=["PATCH"])
+def update_contact(user_id):
     contact = Contact.query.get(user_id)
 
     if not contact:
          return jsonify({"message": "User not Found!!"}), 404
     data = request.json
     contact.first_name = data.get("firstName", contact.first_name)
-    contact.last_name = data.get("firstName", contact.last_name)
-    contact.email = data.get("firstName", contact.email)
+    contact.last_name = data.get("lastName", contact.last_name)
+    contact.email = data.get("email", contact.email)
 
     db.session.commit()
 
@@ -68,10 +68,10 @@ def update_contacts(user_id):
 # localhost:5000/update_contacts
 # REQUEST:{type: get json: { } } RESPONSE : STATUS
 
-@app.route("/delete_contacts/<int:user_id>",methods=["DELETE"])
-def delete_contacts(user_id):
+@app.route("/delete_contact/<int:user_id>",methods=["DELETE"])
+def delete_contact(user_id):
     contact = Contact.query.get(user_id)
-
+    print(contact)
     if not contact:
          return jsonify({"message": "User doesn't exists!!"}), 404
 
